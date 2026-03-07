@@ -25,3 +25,5 @@ export const getBudgetInsights = async (expenses: Expense[]) => {
     return `I couldn't generate insights right now. Please try again later!`;
   }
 };
+
+// Forcing a fresh update to wake up GitHub Actions

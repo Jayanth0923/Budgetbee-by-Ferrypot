@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ChevronLeft, Bell, BellOff, Send, Info, AlertCircle } from "lucide-react";
-import { triggerHaptic, HapticType } from "../utils/haptics";
+// HAPTIC IMPORT REMOVED
 import { subscribeToNotifications, testNotification, checkNotificationPermission, unsubscribeFromNotifications } from "../utils/notifications";
 import { cn } from "../lib/utils";
 
@@ -15,9 +15,8 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
 
   const handleSubscribe = async () => {
     setIsSubscribing(true);
-    triggerHaptic(HapticType.LIGHT);
+    // HAPTIC REMOVED
     
-    // First unsubscribe to clear any stale state
     await unsubscribeFromNotifications();
     
     const success = await subscribeToNotifications();
@@ -31,7 +30,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
 
   const handleReset = async () => {
     setIsSubscribing(true);
-    triggerHaptic(HapticType.MEDIUM);
+    // HAPTIC REMOVED
     await unsubscribeFromNotifications();
     const success = await subscribeToNotifications();
     if (success) {
@@ -44,7 +43,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
 
   const handleTestNotification = async () => {
     await testNotification();
-    triggerHaptic(HapticType.SUCCESS);
+    // HAPTIC REMOVED
   };
 
   return (
@@ -53,7 +52,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
       <div className="p-6 flex items-center gap-4">
         <button 
           onClick={() => {
-            triggerHaptic(HapticType.LIGHT);
+            // HAPTIC REMOVED
             onBack();
           }}
           className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400 active:scale-90 transition-all shadow-sm"
@@ -67,7 +66,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
         {/* Status Card */}
         <section className="space-y-4">
           <h3 className="text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest ml-1">Status</h3>
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm space-y-6">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded-4xl border border-zinc-100 dark:border-zinc-800 shadow-sm space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className={cn(
@@ -150,7 +149,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onBa
         {/* Info Section */}
         <section className="space-y-4">
           <h3 className="text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest ml-1">How it works</h3>
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded-4xl border border-zinc-100 dark:border-zinc-800 shadow-sm space-y-4">
             <div className="flex gap-4">
               <div className="w-8 h-8 rounded-full bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 font-black text-xs shrink-0">1</div>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed pt-1">

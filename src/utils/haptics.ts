@@ -24,7 +24,7 @@ export const triggerHaptic = (type: HapticType = HapticType.LIGHT) => {
     try {
       navigator.vibrate(VIBRATION_PATTERNS[type]);
     } catch (e) {
-      // Ignore vibration errors (some browsers might block it if not triggered by user interaction)
+      // Ignore vibration errors
       console.warn('Haptic feedback failed:', e);
     }
   }

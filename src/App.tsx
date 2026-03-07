@@ -15,7 +15,7 @@ import { ExitConfirmationModal } from "./components/ExitConfirmationModal";
 import { motion, AnimatePresence } from "motion/react";
 import { Home as HomeIcon, Settings as SettingsIcon, Plus } from "lucide-react";
 import { Expense } from "./types";
-import { triggerHaptic, HapticType } from "./utils/haptics";
+import { triggerHaptic, HapticType } from "./utils/haptics";  // kept for AddItemModal only
 import { cn } from "./lib/utils";
 
 const AppContent: React.FC = () => {
@@ -40,32 +40,25 @@ const AppContent: React.FC = () => {
 
       if (event.state?.modal === "add") {
         setIsAddModalOpen(true);
-        // Keep the tab that was active when modal opened
         if (event.state.tab) setActiveTab(event.state.tab);
       } else {
         setIsAddModalOpen(false);
         
         if (wasModalOpen) {
           if (isSuccessRef.current) {
-            // Requirement: Success Add should always go to Home
             setActiveTab("home");
             isSuccessRef.current = false;
-            // Ensure we stay on home state in history
             window.history.replaceState({ tab: "home" }, "");
           } else {
-            // Requirement: Exit (X) should return to the previous tab
             setActiveTab(event.state?.tab || "home");
           }
         } else if (event.state?.tab) {
           setActiveTab(event.state.tab);
         } else if (!event.state) {
-          // We hit the beginning of history while on Home
           if (activeTab === "home") {
             setShowExitConfirm(true);
-            // Push state back so they stay on home if they cancel
             window.history.pushState({ tab: "home" }, "");
           } else {
-            // If they were on settings and hit back to null, go to home
             setActiveTab("home");
             window.history.replaceState({ tab: "home" }, "");
           }
@@ -75,10 +68,8 @@ const AppContent: React.FC = () => {
 
     window.addEventListener("popstate", handlePopState);
     
-    // Initial state setup to prime the history stack
     if (!window.history.state) {
       window.history.replaceState({ tab: "home" }, "");
-      // Push an extra state so the first "back" button press is caught by popstate
       window.history.pushState({ tab: "home" }, "");
     }
 
@@ -86,32 +77,27 @@ const AppContent: React.FC = () => {
   }, [activeTab]);
 
   const handleExitApp = () => {
-    // In a web app, we can't always close the window, but we try
     try {
       window.close();
-      // Fallback for browsers that block window.close()
       window.location.href = "about:blank";
     } catch (e) {
       window.location.href = "https://google.com";
     }
   };
 
-  // Save scroll position before switching tabs
   const navigateToTab = (tab: "home" | "settings") => {
     if (tab === activeTab) return;
     
     scrollPositions.current[activeTab] = window.scrollY;
     setActiveTab(tab);
-    // Use replaceState to avoid navigation loops
     window.history.replaceState({ tab }, "");
-    triggerHaptic(HapticType.LIGHT);
+    // HAPTIC REMOVED
   };
 
   const openAddModal = () => {
     setIsAddModalOpen(true);
-    // Push state so back button closes modal and returns to current tab
     window.history.pushState({ tab: activeTab, modal: "add" }, "");
-    triggerHaptic(HapticType.MEDIUM);
+    triggerHaptic(HapticType.LIGHT);  // KEPT – single pulse for Add button
   };
 
   const handleCloseModal = (isSuccess: boolean = false) => {
@@ -130,10 +116,8 @@ const AppContent: React.FC = () => {
     setExpenseToEdit(null);
   };
 
-  // Restore scroll position after tab switch
   useEffect(() => {
     const savedScroll = scrollPositions.current[activeTab] || 0;
-    // Small delay to ensure content is rendered
     setTimeout(() => {
       window.scrollTo({ top: savedScroll, behavior: "instant" as any });
     }, 0);
@@ -141,7 +125,6 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Only set to home if we're not already on a specific tab from history
       if (!window.history.state?.tab) {
         setActiveTab("home");
       }

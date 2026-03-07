@@ -8,7 +8,7 @@ import { LogOut, Download, HelpCircle, Mail, MessageSquare, Info, Heart, Chevron
 import { format } from "date-fns";
 import { useTheme } from "../ThemeContext";
 import { cn } from "../lib/utils";
-import { triggerHaptic, HapticType } from "../utils/haptics";
+// HAPTIC IMPORT REMOVED
 import { NotificationSettings } from "./NotificationSettings";
 import { SupportPages } from "./SupportPages";
 
@@ -19,7 +19,6 @@ export const Settings: React.FC = () => {
   const [view, setView] = useState<"main" | "notifications" | "help" | "contact" | "feedback" | "about" | "donate" | "info">("main");
   const mainScrollPos = React.useRef(0);
 
-  // Handle browser back button for sub-views
   React.useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       if (event.state?.view) {
@@ -31,7 +30,6 @@ export const Settings: React.FC = () => {
 
     window.addEventListener("popstate", handlePopState);
     
-    // Check initial state if we're already in a sub-view
     if (window.history.state?.view) {
       setView(window.history.state.view);
     }
@@ -39,10 +37,8 @@ export const Settings: React.FC = () => {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // Restore scroll position when returning to main view
   React.useEffect(() => {
     if (view === 'main' && mainScrollPos.current > 0) {
-      // Small delay to ensure content is rendered
       setTimeout(() => {
         window.scrollTo({ top: mainScrollPos.current, behavior: 'instant' as any });
       }, 0);
@@ -61,7 +57,7 @@ export const Settings: React.FC = () => {
   };
 
   const handleBack = () => {
-    triggerHaptic(HapticType.LIGHT);
+    // HAPTIC REMOVED
     window.history.back();
   };
 
@@ -74,18 +70,18 @@ export const Settings: React.FC = () => {
   }
 
   const handleLogout = () => {
-    triggerHaptic(HapticType.WARNING);
+    // HAPTIC REMOVED
     setShowLogoutConfirm(true);
   };
 
   const confirmLogout = () => {
-    triggerHaptic(HapticType.MEDIUM);
+    // HAPTIC REMOVED
     auth.signOut();
   };
 
   const exportToExcel = async () => {
     if (!user) return;
-    triggerHaptic(HapticType.LIGHT);
+    // HAPTIC REMOVED
 
     const q = query(
       collection(db, "expenses"),
@@ -102,7 +98,6 @@ export const Settings: React.FC = () => {
       });
     });
 
-    // Sort in-memory to avoid index requirement
     expenses.sort((a, b) => a.timestamp - b.timestamp);
 
     const formattedExpenses = expenses.map(data => ({
@@ -118,28 +113,24 @@ export const Settings: React.FC = () => {
 
     const wb = XLSX.utils.book_new();
     
-    // Group by month
     const months = [...new Set(formattedExpenses.map(e => e.Month))];
     
     months.forEach(month => {
       const monthData = formattedExpenses.filter(e => e.Month === month);
       const ws = XLSX.utils.json_to_sheet(monthData);
       
-      // Calculate total for the month
       const monthTotal = monthData.reduce((sum, item) => sum + item.Total, 0);
       
-      // Add a summary row
-      // We add it 2 rows after the last data row (1 row gap)
       const lastRow = monthData.length + 2;
       XLSX.utils.sheet_add_aoa(ws, [
         ["", "", "GRAND TOTAL", monthTotal]
       ], { origin: `A${lastRow + 1}` });
 
-      XLSX.utils.book_append_sheet(wb, ws, month.substring(0, 31)); // Sheet name max 31 chars
+      XLSX.utils.book_append_sheet(wb, ws, month.substring(0, 31));
     });
 
     XLSX.writeFile(wb, `BudgetBee_Expenses_${format(new Date(), "dd_MMM_yyyy")}.xlsx`);
-    triggerHaptic(HapticType.SUCCESS);
+    // HAPTIC REMOVED
   };
 
   const menuItems = [
@@ -185,10 +176,10 @@ export const Settings: React.FC = () => {
 
       <section className="space-y-4">
         <h3 className="text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest ml-1">Preferences</h3>
-        <div className="bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 rounded-4xl border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden">
           <button
             onClick={() => {
-              triggerHaptic(HapticType.LIGHT);
+              // HAPTIC REMOVED
               navigateToView("notifications");
             }}
             className="w-full p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors active:scale-[0.98]"
@@ -206,7 +197,7 @@ export const Settings: React.FC = () => {
 
       <section className="space-y-4">
         <h3 className="text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest ml-1">Appearance</h3>
-        <div className="bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm p-2 flex gap-1">
+        <div className="bg-white dark:bg-zinc-900 rounded-4xl border border-zinc-100 dark:border-zinc-800 shadow-sm p-2 flex gap-1">
           {[
             { id: "system", label: "System", icon: Monitor },
             { id: "light", label: "Light", icon: Sun },
@@ -216,7 +207,7 @@ export const Settings: React.FC = () => {
               key={t.id}
               onClick={() => {
                 setTheme(t.id as any);
-                triggerHaptic(HapticType.LIGHT);
+                // HAPTIC REMOVED
               }}
               className={cn(
                 "flex-1 flex flex-col items-center gap-2 py-3 rounded-2xl transition-all",
@@ -234,12 +225,12 @@ export const Settings: React.FC = () => {
 
       <section className="space-y-4">
         <h3 className="text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest ml-1">Support & Info</h3>
-        <div className="bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 rounded-4xl border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden">
           {menuItems.map((item, idx) => (
             <button
               key={idx}
               onClick={() => {
-                triggerHaptic(HapticType.LIGHT);
+                // HAPTIC REMOVED
                 navigateToView(item.view as any);
               }}
               className="w-full p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors border-b border-zinc-50 dark:border-zinc-800 last:border-none active:scale-[0.98]"
@@ -282,7 +273,7 @@ export const Settings: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-xs bg-white dark:bg-zinc-900 rounded-[32px] p-8 z-[60] shadow-2xl text-center border border-zinc-100 dark:border-zinc-800"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-xs bg-white dark:bg-zinc-900 rounded-4xl p-8 z-60 shadow-2xl text-center border border-zinc-100 dark:border-zinc-800"
             >
               <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center text-red-500 dark:text-red-400 mx-auto mb-6">
                 <AlertTriangle size={32} />

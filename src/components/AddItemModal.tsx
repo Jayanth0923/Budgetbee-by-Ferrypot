@@ -6,7 +6,7 @@ import { db } from "../lib/firebase";
 import { useAuth } from "../AuthContext";
 import { cn } from "../lib/utils";
 import { Expense } from "../types";
-import { triggerHaptic, HapticType } from "../utils/haptics";
+import { triggerHaptic, HapticType } from "../utils/haptics"; // kept
 
 interface AddItemModalProps {
   isOpen: boolean;
@@ -51,13 +51,13 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, onS
 
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
       setError("Please enter a valid amount greater than 0.");
-      triggerHaptic(HapticType.WARNING);
+      // HAPTIC REMOVED
       return;
     }
 
     if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
       setError("Please enter a valid quantity of 1 or more.");
-      triggerHaptic(HapticType.WARNING);
+      // HAPTIC REMOVED
       return;
     }
 
@@ -81,14 +81,12 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, onS
           timestamp: Date.now()
         });
       }
-      triggerHaptic(HapticType.SUCCESS);
-      // Reset state first
+      triggerHaptic(HapticType.SUCCESS); // KEPT – single pulse after successful save
       setName("");
       setAmount("");
       setQuantity("1");
       setCategory("General");
       setError(null);
-      // Then close with success
       if (onSuccess) {
         onSuccess();
       } else {
@@ -96,7 +94,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, onS
       }
     } catch (error: any) {
       console.error("Failed to save expense", error);
-      triggerHaptic(HapticType.ERROR);
+      // HAPTIC REMOVED
       alert("Failed to save expense: " + (error.message || "Unknown error"));
     } finally {
       setIsSubmitting(false);
@@ -195,7 +193,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, onS
                       type="button"
                       onClick={() => {
                         setCategory(cat);
-                        triggerHaptic(HapticType.LIGHT);
+                        // HAPTIC REMOVED
                       }}
                       className={cn(
                         "px-4 py-2 rounded-xl text-sm font-bold transition-all",

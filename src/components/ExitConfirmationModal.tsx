@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { AlertTriangle, X, LogOut } from "lucide-react";
-import { triggerHaptic, HapticType } from "../utils/haptics";
+// HAPTIC IMPORT REMOVED
 
 interface ExitConfirmationModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const ExitConfirmationModal: React.FC<ExitConfirmationModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -47,10 +47,7 @@ export const ExitConfirmationModal: React.FC<ExitConfirmationModalProps> = ({
             
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => {
-                  triggerHaptic(HapticType.LIGHT);
-                  onClose();
-                }}
+                onClick={onClose}
                 className="flex items-center justify-center space-x-2 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
                 <X size={18} />
@@ -58,10 +55,7 @@ export const ExitConfirmationModal: React.FC<ExitConfirmationModalProps> = ({
               </button>
               
               <button
-                onClick={() => {
-                  triggerHaptic(HapticType.MEDIUM);
-                  onConfirm();
-                }}
+                onClick={onConfirm}
                 className="flex items-center justify-center space-x-2 p-4 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-semibold hover:opacity-90 transition-opacity"
               >
                 <LogOut size={18} />

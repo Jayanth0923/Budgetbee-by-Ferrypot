@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { ChevronLeft, HelpCircle, Mail, MessageSquare, Info, Heart, ExternalLink, Copy, Check } from "lucide-react";
-import { triggerHaptic, HapticType } from "../utils/haptics";
+// HAPTIC IMPORT REMOVED
 import { useState } from "react";
 
 interface SupportPagesProps {
@@ -18,7 +18,7 @@ export const SupportPages: React.FC<SupportPagesProps> = ({ view, onBack }) => {
   const handleCopyUPI = () => {
     navigator.clipboard.writeText(upiId);
     setCopied(true);
-    triggerHaptic(HapticType.SUCCESS);
+    // HAPTIC REMOVED
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -119,13 +119,13 @@ export const SupportPages: React.FC<SupportPagesProps> = ({ view, onBack }) => {
               {/* Toggle Switch */}
               <div className="flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-2xl mb-8 max-w-[240px] mx-auto">
                 <button 
-                  onClick={() => { triggerHaptic(HapticType.LIGHT); setShowQR(true); }}
+                  onClick={() => { /* HAPTIC REMOVED */ setShowQR(true); }}
                   className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${showQR ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
                 >
                   QR Code
                 </button>
                 <button 
-                  onClick={() => { triggerHaptic(HapticType.LIGHT); setShowQR(false); }}
+                  onClick={() => { /* HAPTIC REMOVED */ setShowQR(false); }}
                   className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${!showQR ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
                 >
                   UPI ID
@@ -162,7 +162,7 @@ export const SupportPages: React.FC<SupportPagesProps> = ({ view, onBack }) => {
               <div className="grid grid-cols-1 gap-3">
                 <button 
                   onClick={() => {
-                    triggerHaptic(HapticType.MEDIUM);
+                    // HAPTIC REMOVED
                     window.location.href = upiUrl;
                   }}
                   className="w-full py-4 bg-red-500 text-white font-black rounded-2xl shadow-lg shadow-red-200 dark:shadow-red-900/20 active:scale-95 transition-all flex items-center justify-center space-x-2"
@@ -198,7 +198,7 @@ export const SupportPages: React.FC<SupportPagesProps> = ({ view, onBack }) => {
       <header className="flex items-center mb-8">
         <button 
           onClick={() => {
-            triggerHaptic(HapticType.LIGHT);
+            // HAPTIC REMOVED
             onBack();
           }}
           className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-zinc-900 dark:text-white shadow-sm active:scale-90 transition-all"

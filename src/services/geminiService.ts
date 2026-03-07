@@ -3,13 +3,13 @@ import { Expense } from "../types";
 
 export const getBudgetInsights = async (expenses: Expense[]) => {
   try {
-    // UPDATED: Use import.meta.env and the VITE_ prefix for Vite apps
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
     
-    if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-      throw new Error("Gemini API Key is missing or invalid. Please check your environment variables.");
+    if (!apiKey) {
+      throw new Error("Gemini API Key is missing. Please check your GitHub Secrets.");
     }
     
+    // 1. Initialize the AI client
     const ai = new GoogleGenAI({ apiKey });
     
     const expenseSummary = expenses.map(e => ({
@@ -20,8 +20,9 @@ export const getBudgetInsights = async (expenses: Expense[]) => {
       timestamp: e.timestamp
     }));
 
+    // 2. Use the updated model name and correct method call
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash", // Note: gemini-1.5-flash is the stable standard
+      model: "gemini-2.0-flash", // Updated to the current stable model
       contents: `Here are my recent expenses: ${JSON.stringify(expenseSummary)}. Can you provide 3 brief, actionable financial tips or insights?`,
       config: {
         systemInstruction: "You are a friendly and professional financial advisor named BudgetBee. Your goal is to help users save money and manage their budgets better. Keep your advice concise, encouraging, and based on the data provided.",

@@ -8,11 +8,8 @@ export const getBudgetInsights = async (expenses: Expense[]) => {
     
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // THE FIX: Forcing the stable 'v1' API version and using the recommended flash model
-    const model = genAI.getGenerativeModel(
-      { model: "gemini-1.5-flash" },
-      { apiVersion: "v1" } // This overrides the broken v1beta default!
-    );
+    // Use the default API version (v1beta) – remove the apiVersion override
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const expenseSummary = expenses.map(e => ({
       name: e.name, category: e.category, amount: e.amount
@@ -28,5 +25,3 @@ export const getBudgetInsights = async (expenses: Expense[]) => {
     return `I couldn't generate insights right now. Please try again later!`;
   }
 };
-
-// Forcing a fresh update to wake up GitHub Actions

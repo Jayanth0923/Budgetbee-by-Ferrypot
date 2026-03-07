@@ -8,24 +8,8 @@ export const getBudgetInsights = async (expenses: Expense[]) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // (Optional) Debug: List available models via REST API
-    
-    const listModels = async () => {
-      try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
-        );
-        const data = await response.json();
-        console.log('Available models:', data.models?.map((m: any) => m.name));
-      } catch (e) {
-        console.error('Failed to list models', e);
-      }
-    };
-    await listModels();
-    
-
-    // Use the default API version (v1beta) – no apiVersion override
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Use a currently supported model (from your list)
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const expenseSummary = expenses.map(e => ({
       name: e.name,

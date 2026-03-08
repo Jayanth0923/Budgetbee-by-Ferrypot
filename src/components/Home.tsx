@@ -7,7 +7,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "motion/re
 import { Plus, Search, TrendingUp, Wallet, Clock, Tag, Trash2, Edit2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "../lib/utils";
-import { triggerHaptic, HapticType } from "../utils/haptics"; // KEPT for swipe
+//import { triggerHaptic, HapticType } from "../utils/haptics"; // KEPT for swipe
 import { BudgetAdvisor } from "./BudgetAdvisor";
 
 export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: Expense) => void }> = ({ onAddClick, onEditExpense }) => {
@@ -195,10 +195,10 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
                       dragSnapToOrigin
                       onDragEnd={(_, info) => {
                         if (info.offset.x > 80) {
-                          triggerHaptic(HapticType.MEDIUM); // KEPT: swipe right edit
+                          // triggerHaptic(HapticType.MEDIUM); // KEPT: swipe right edit
                           onEditExpense(expense);
                         } else if (info.offset.x < -80) {
-                          triggerHaptic(HapticType.WARNING); // KEPT: swipe left delete
+                          // triggerHaptic(HapticType.WARNING); // KEPT: swipe left delete
                           setExpenseToDelete(expense);
                         }
                       }}

@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "motion/re
 import { Plus, Search, TrendingUp, Wallet, Clock, Tag, Trash2, Edit2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "../lib/utils";
+// ADDED: Import haptic utility
 import { triggerHaptic, HapticType } from "../utils/haptics";
 import { BudgetAdvisor } from "./BudgetAdvisor";
 
@@ -42,14 +43,12 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
         }
       });
 
-      // Sort in-memory to avoid index requirement
       items.sort((a, b) => b.timestamp - a.timestamp);
 
       setExpenses(items);
       setTotalExpense(total);
       setTodayExpense(today);
 
-      // Simple logic for quick adds: most frequent items
       const counts: Record<string, {count: number, category: string}> = {};
       items.forEach(item => {
         if (!counts[item.name]) counts[item.name] = { count: 0, category: item.category || 'General' };
@@ -69,9 +68,8 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
 
   const handleQuickAdd = async (item: {name: string, category: string}) => {
     if (!user) return;
-    triggerHaptic(HapticType.LIGHT);
+    // No haptic for quick add (kept silent)
     try {
-      // Find the last price for this item
       const lastItem = expenses.find(e => e.name === item.name);
       await addDoc(collection(db, "expenses"), {
         userId: user.uid,
@@ -81,10 +79,8 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
         category: item.category,
         timestamp: Date.now()
       });
-      triggerHaptic(HapticType.SUCCESS);
     } catch (error) {
       console.error("Quick add failed", error);
-      triggerHaptic(HapticType.ERROR);
     }
   };
 
@@ -93,10 +89,9 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
     try {
       await deleteDoc(doc(db, "expenses", expenseToDelete.id));
       setExpenseToDelete(null);
-      triggerHaptic(HapticType.SUCCESS);
+      // No haptic on delete confirmation (kept silent)
     } catch (error) {
       console.error("Delete failed", error);
-      triggerHaptic(HapticType.ERROR);
     }
   };
 
@@ -202,9 +197,11 @@ export const Home: React.FC<{ onAddClick: () => void; onEditExpense: (expense: E
                       dragSnapToOrigin
                       onDragEnd={(_, info) => {
                         if (info.offset.x > 80) {
+                          // ADDED: Haptic for edit swipe
                           triggerHaptic(HapticType.MEDIUM);
                           onEditExpense(expense);
                         } else if (info.offset.x < -80) {
+                          // ADDED: Haptic for delete swipe
                           triggerHaptic(HapticType.WARNING);
                           setExpenseToDelete(expense);
                         }
